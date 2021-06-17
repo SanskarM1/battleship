@@ -38,7 +38,7 @@ class Grid (pygame.sprite.Sprite):
 
 
 if __name__ == '__main__':
-    g = Grid()
+    g = Grid(True)
     g.add_ship(Ship((4, 6), "up", 3))
     g.add_ship(Ship((4, 6), "up", 3))
     print(f"length: {len(g.ships)}" )
