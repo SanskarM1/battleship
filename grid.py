@@ -33,9 +33,23 @@ class Grid(pygame.sprite.Sprite):
 
         self.rect = pygame.rect.Rect(computer_rect if computer_board else player_rect)
 
-        self.image.fill((255, 120, 255) if computer_board else (255,200,255))
+        self.image.fill((199, 199, 199) if computer_board else (180, 180, 180))
 
-        pygame.draw.line(self.image, (0,0,0) , (0,0) , (self.image.get_width(), self.image.get_height()) , 5)
+        self.add_lines()
+
+    def add_lines(self):
+        # horizontal lines
+        y = 0
+        for i in range(11):
+            pygame.draw.line(self.image, (0, 0, 0), (0, y), (self.image.get_width(), y), 3)
+            y += self.image.get_height() / self.board_size
+        # vertical lines
+        x = 0
+        for i in range(11):
+            pygame.draw.line(self.image, (0, 0, 0), (x, 0), (x, self.image.get_height()), 3)
+            x += self.image.get_width() / self.board_size
+
+        # pygame.draw.line(self.image, (0,0,0) , (0,0) , (self.image.get_width(), self.image.get_height()) , 5)
 
     def add_ship(self, ship):
         for pos in ship.positions:
@@ -45,6 +59,24 @@ class Grid(pygame.sprite.Sprite):
         for pos in ship.positions:
             self.ship_board[pos[1]][pos[0]] = True
         return True
+
+    def shoot_at(self, position):
+        """
+        marks where player shoots
+        :param position: position of attack - tuple [int, int]
+        :return: true if hit / false otherwise BOOLEAN :)
+        """
+        x, y = position
+        if self.hit_board[y][x] is not None:
+            return False
+        if not self.ship_board[y][x]:
+            self.hit_board[y][x] = False
+            return False
+        self.hit_board[y][x] = True
+        return True
+
+
+
 
 
 if __name__ == '__main__':
