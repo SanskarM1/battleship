@@ -1,14 +1,17 @@
 import pygame
 from grid import Grid
+import grid
 import constants
 pygame.init()
 screen = pygame.display.set_mode((constants.SCREEN_WIDTH,constants.SCREEN_HEIGHT))
 pygame.display.set_caption("GTA 6")
 clock = pygame.time.Clock()
 isGameRunning = True
+grid.load_images()
 player_grid = Grid(False)
 computer_grid = Grid(True)
 grid_group = pygame.sprite.Group(player_grid, computer_grid)
+
 while isGameRunning:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

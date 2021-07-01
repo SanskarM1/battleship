@@ -5,6 +5,23 @@ import pygame
 import constants
 from ship import Ship
 
+clashofclansbomb = None
+explosion = None
+ripple = None
+
+
+def load_images():
+    global clashofclansbomb
+    global explosion
+    global ripple
+
+    clashofclansbomb = pygame.image.load("images/clashofclans-removebg-preview.png")
+    clashofclansbomb.convert_alpha()
+    explosion = pygame.image.load("images/explosion (1).png")
+    explosion.convert_alpha()
+    ripple = pygame.image.load("images/ripple (1).png")
+    ripple.convert_alpha()
+
 
 class Grid(pygame.sprite.Sprite):
     def __init__(self, computer_board):
@@ -36,6 +53,8 @@ class Grid(pygame.sprite.Sprite):
         self.image.fill((199, 199, 199) if computer_board else (180, 180, 180))
 
         self.add_lines()
+
+        self.image.blit(clashofclansbomb, (0, 0))
 
     def add_lines(self):
         # horizontal lines
@@ -74,9 +93,6 @@ class Grid(pygame.sprite.Sprite):
             return False
         self.hit_board[y][x] = True
         return True
-
-
-
 
 
 if __name__ == '__main__':
