@@ -16,6 +16,8 @@ while isGameRunning:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             isGameRunning = False
+        if event.type == pygame.MOUSEMOTION:
+            computer_grid.handle_event(event)
     screen.fill((100,0,255))
     pygame.draw.circle(screen,(0,0,0),(600,600),20)
     grid_group.draw(screen)

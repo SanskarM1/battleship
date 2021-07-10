@@ -5,9 +5,9 @@ import pygame
 import constants
 from ship import Ship
 
-clashofclansbomb = None
-explosion = None
-ripple = None
+clashofclansbomb = pygame.surface.Surface((1,1))
+explosion = pygame.surface.Surface((1,1))
+ripple = pygame.surface.Surface((1,1))
 
 
 def load_images():
@@ -21,6 +21,10 @@ def load_images():
     explosion.convert_alpha()
     ripple = pygame.image.load("images/ripple (1).png")
     ripple.convert_alpha()
+    temp_ripple = pygame.surface.Surface((ripple.get_width() + 44, ripple.get_height() + 44)).convert_alpha()
+    temp_ripple.fill((255,255,255,0))
+    temp_ripple.blit(ripple, (22, 22))
+    ripple = temp_ripple
 
 
 class Grid(pygame.sprite.Sprite):
@@ -54,7 +58,12 @@ class Grid(pygame.sprite.Sprite):
 
         self.add_lines()
 
-        self.image.blit(clashofclansbomb, (0, 0))
+
+        self.scalebomb = pygame.transform.scale(clashofclansbomb, (int(self.image.get_height() / self.board_size), int(self.image.get_height() / self.board_size)))
+        self.scaleripple = pygame.transform.scale(ripple, (int(self.image.get_height() / self.board_size), int(self.image.get_height() / self.board_size)))
+        self.scaleboom = pygame.transform.scale(explosion, (int(self.image.get_height() / self.board_size), int(self.image.get_height() / self.board_size)))
+        #self.image.blit(self.scaleboom, (0, 0))
+        self.grid_image = self.image.copy()
 
     def add_lines(self):
         # horizontal lines
@@ -93,6 +102,18 @@ class Grid(pygame.sprite.Sprite):
             return False
         self.hit_board[y][x] = True
         return True
+
+    def draw_on(self, surf):
+        pass
+
+    def handle_event(self, ev):
+        x,y = pygame.mouse.get_pos()
+        colu = (x-15) // self.image.get_width()/self.board_size
+        ro = (y-15) // self.image.get_width()/self.board_size
+        self.image = self.grid_image.copy()
+        self.image.blit(self.scalebomb, (colu * self.image.get_width()/self.board_size, ro * self.image.get_width()/self.board_size))
+
+
 
 
 if __name__ == '__main__':
