@@ -5,9 +5,9 @@ import pygame
 import constants
 from ship import Ship
 
-clashofclansbomb = pygame.surface.Surface((1,1))
-explosion = pygame.surface.Surface((1,1))
-ripple = pygame.surface.Surface((1,1))
+clashofclansbomb = pygame.surface.Surface((1, 1))
+explosion = pygame.surface.Surface((1, 1))
+ripple = pygame.surface.Surface((1, 1))
 
 
 def load_images():
@@ -22,7 +22,7 @@ def load_images():
     ripple = pygame.image.load("images/ripple (1).png")
     ripple.convert_alpha()
     temp_ripple = pygame.surface.Surface((ripple.get_width() + 44, ripple.get_height() + 44)).convert_alpha()
-    temp_ripple.fill((255,255,255,0))
+    temp_ripple.fill((255, 255, 255, 0))
     temp_ripple.blit(ripple, (22, 22))
     ripple = temp_ripple
 
@@ -58,11 +58,13 @@ class Grid(pygame.sprite.Sprite):
 
         self.add_lines()
 
-
-        self.scalebomb = pygame.transform.scale(clashofclansbomb, (int(self.image.get_height() / self.board_size), int(self.image.get_height() / self.board_size)))
-        self.scaleripple = pygame.transform.scale(ripple, (int(self.image.get_height() / self.board_size), int(self.image.get_height() / self.board_size)))
-        self.scaleboom = pygame.transform.scale(explosion, (int(self.image.get_height() / self.board_size), int(self.image.get_height() / self.board_size)))
-        #self.image.blit(self.scaleboom, (0, 0))
+        self.scalebomb = pygame.transform.scale(clashofclansbomb, (
+        int(self.image.get_height() / self.board_size), int(self.image.get_height() / self.board_size)))
+        self.scaleripple = pygame.transform.scale(ripple, (
+        int(self.image.get_height() / self.board_size), int(self.image.get_height() / self.board_size)))
+        self.scaleboom = pygame.transform.scale(explosion, (
+        int(self.image.get_height() / self.board_size), int(self.image.get_height() / self.board_size)))
+        # self.image.blit(self.scaleboom, (0, 0))
         self.grid_image = self.image.copy()
 
     def add_lines(self):
@@ -96,7 +98,7 @@ class Grid(pygame.sprite.Sprite):
         """
         x, y = position
         if self.hit_board[y][x] is not None:
-            return False
+            return None
         if not self.ship_board[y][x]:
             self.hit_board[y][x] = False
             return False
@@ -107,12 +109,23 @@ class Grid(pygame.sprite.Sprite):
         pass
 
     def handle_event(self, ev):
-        x,y = pygame.mouse.get_pos()
-        colu = (x-15) // self.image.get_width()/self.board_size
-        ro = (y-15) // self.image.get_width()/self.board_size
-        self.image = self.grid_image.copy()
-        self.image.blit(self.scalebomb, (colu * self.image.get_width()/self.board_size, ro * self.image.get_width()/self.board_size))
 
+        if ev.type == pygame.MOUSEMOTION:
+            x, y = pygame.mouse.get_pos()
+            colu = (x - 15) // (self.image.get_width() / self.board_size)
+            ro = (y - 15) // (self.image.get_width() / self.board_size)
+            self.image = self.grid_image.copy()
+            self.image.blit(self.scalebomb, (
+                colu * self.image.get_width() / self.board_size, ro * self.image.get_width() / self.board_size))
+
+        elif ev.type == pygame.MOUSEBUTTONDOWN:
+            x, y = pygame.mouse.get_pos()
+            colu = (x - 15) // (self.image.get_width() / self.board_size)
+            ro = (y - 15) // (self.image.get_width() / self.board_size)
+            didhit = self.shoot_at((int(colu), int(ro)))
+            if didhit is not None:
+                self.grid_image.blit(self.scaleboom if didhit else self.scaleripple, (
+                colu * self.image.get_width() / self.board_size, ro * self.image.get_width() / self.board_size))
 
 
 
