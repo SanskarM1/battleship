@@ -1,4 +1,5 @@
 import random
+from operator import add
 
 
 def dumbcomputer(layout):
@@ -24,8 +25,28 @@ def competentcomputer(layout):
     :param layout:
     :return:
     """
-    pass
+    hits = []
+    for row in range(len(layout)):
+        for col in range(len(layout[row])):
+            if layout[row][col] is True:
+                hits.append((row, col))
+    if len(hits) == 0:
+        return dumbcomputer(layout)
 
+    """
+    go through each hit in list "hits"
+    generate all adjacent positions (up down left right) for each "hit"
+    each of generated positions - check if in bounds - if not, ignore - if in bounds but already fired, ignore
+    if not ignored, add it to random potential firing location list
+    pick random from location list (if not empty), return position. - if empty, revert back to dumb comp.
+    
+    """
+
+    for hit in hits:
+        up = map(add, hit, (-1,0))
+        down = map(add, hit, (1,0))
+        right = map(add, hit, (0,1))
+        left = map(add, hit, (0,-1))
 
 
 
